@@ -336,7 +336,7 @@ class App extends Component {
               <Stack horizontal className="top-bar">
                 <div>
                   <img src={logo} width={20} height={20} alt="" />
-                  <h1 className="top-bar-title">Azure Digital Twins Explorer</h1>
+                  <h1 className="top-bar-title">USYD Patient Digital Twins Explorer</h1>
                 </div>
                 <AppCommandBar optionalComponents={optionalComponentsState}
                   optionalComponentsState={optionalComponentsState}
@@ -353,11 +353,11 @@ class App extends Component {
               />
               <div className="top-area">
                 <Text as={"h2"} variant={'small'} className="query-explorer-header" aria-label={this.props.t("app.goldenLayoutConfig.queryComponent")}>{this.props.t("app.goldenLayoutConfig.queryComponent")}</Text>
-                <QueryComponent onQueryExecuted={() => this.handleMainContentPivotChange('graph-viewer')}/>
+                <QueryComponent onQueryExecuted={() => this.handleMainContentPivotChange('graph-viewer')} />
               </div>
               <div className="main-area" style={{ height: `calc(100vh - 155px - ${(layout.showConsole || layout.showOutput) ? layout.drawerHeight : 0}%)` }}>
                 <Stack horizontal style={{ height: "100%" }}>
-                  <div style={{width: `${layout.modelViewerWidth}%` }}>
+                  <div style={{ width: `${layout.modelViewerWidth}%` }}>
                     <Pivot aria-label="Use left and right arrow keys to navigate" selectedKey={leftPanelSelectedKey} className="tab-pivot" headersOnly onLinkClick={this.handleLeftPanelPivotChange}>
                       <PivotItem itemKey="twins" headerText={this.props.t("app.goldenLayoutConfig.twinViewer")} />
                       <PivotItem style={{ height: "100%" }} itemKey="models" headerText={this.props.t("app.goldenLayoutConfig.modelViewer")} />
@@ -380,12 +380,12 @@ class App extends Component {
                     onMouseDown={this.handleModelViewerResizeMouseDown}
                     onFocus={this.handleModelViewerOnFocus}
                     onBlur={this.handleModelViewerOnBlur}
-                    />
+                  />
                   <div style={{ width: `calc(${100 - layout.modelViewerWidth}% - 3px)`, flex: 1 }}>
                     <Pivot aria-label="Use left and right arrow keys to navigate" selectedKey={mainContentSelectedKey}
                       className="tab-pivot" headersOnly onLinkClick={(item) => this.handleMainContentPivotChange(item.props.itemKey)}>
-                      <PivotItem style={{ height: "100%" }} itemKey="graph-viewer" headerText={this.props.t("app.goldenLayoutConfig.graph")} ariaLabel={this.props.t("app.goldenLayoutConfig.graph")} ariaLive="assertive"  />
-                      <PivotItem style={{ height: "100%" }} itemKey="model-graph-viewer" headerText={this.props.t("app.goldenLayoutConfig.modelGraphViewer")}  ariaLabel={this.props.t("app.goldenLayoutConfig.modelGraphViewer")} ariaLive="assertive" />
+                      <PivotItem style={{ height: "100%" }} itemKey="graph-viewer" headerText={this.props.t("app.goldenLayoutConfig.graph")} ariaLabel={this.props.t("app.goldenLayoutConfig.graph")} ariaLive="assertive" />
+                      <PivotItem style={{ height: "100%" }} itemKey="model-graph-viewer" headerText={this.props.t("app.goldenLayoutConfig.modelGraphViewer")} ariaLabel={this.props.t("app.goldenLayoutConfig.modelGraphViewer")} ariaLive="assertive" />
                       {layout.showImport && <PivotItem style={{ height: "100%" }} itemKey="import" headerText={this.props.t("app.importComponentConfig.title")} ariaLabel={this.props.t("app.importComponentConfig.title")} ariaLive="assertive"
                         onRenderItemLink={this.renderClosablePivotItem} />}
                       {layout.showExport && <PivotItem style={{ height: "100%" }} itemKey="export" headerText={this.props.t("app.exportComponentConfig.title")} ariaLabel={this.props.t("app.exportComponentConfig.title")} ariaLive="assertive"
@@ -402,7 +402,7 @@ class App extends Component {
                         <ImportComponent file={layout.importFile} ref={this.importRef} />
                       </div>}
                       {layout.showExport && <div className={mainContentSelectedKey === "export" ? "show" : "hidden"}>
-                        <ExportComponent query={this.state.exportedQuery}/>
+                        <ExportComponent query={this.state.exportedQuery} />
                       </div>}
                     </div>
                   </div>
@@ -435,7 +435,7 @@ class App extends Component {
           </div>
         </ErrorBoundary>
         <ErrorMessageComponent />
-        { isLoading && <LoaderComponent /> }
+        {isLoading && <LoaderComponent />}
       </>
     );
   }
