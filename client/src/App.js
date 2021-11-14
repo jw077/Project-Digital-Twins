@@ -20,7 +20,7 @@ import { withTranslation } from "react-i18next";
 import GraphViewerComponent from "./components/GraphViewerComponent/GraphViewerComponent";
 import ModelGraphViewerComponent from "./components/ModelGraphViewerComponent/ModelGraphViewerComponent";
 import ModelViewerComponent from "./components/ModelViewerComponent/ModelViewerComponent";
-import { TwinViewerComponent } from "./components/TwinViewerComponent/TwinViewerComponent";
+import PatientFileViwerComponent from "./components/PatientFileVIwerComponent/index";
 import { OutputComponent } from "./components/OutputComponent/OutputComponent";
 import QueryComponent from "./components/QueryComponent/QueryComponent";
 import { ImportComponent } from "./components/ImportComponent/ImportComponent";
@@ -335,8 +335,8 @@ class App extends Component {
             <div role="banner" className="header" >
               <Stack horizontal className="top-bar">
                 <div>
-                  <img src={logo} width={20} height={20} alt="" />
-                  <h1 className="top-bar-title">USYD Patient Digital Twins Explorer</h1>
+                  <img src={logo} width={30} height={30} alt="" />
+                  <h1 className="top-bar-title">USYD - Patient Digital Twins Explorer</h1>
                 </div>
                 <AppCommandBar optionalComponents={optionalComponentsState}
                   optionalComponentsState={optionalComponentsState}
@@ -359,12 +359,12 @@ class App extends Component {
                 <Stack horizontal style={{ height: "100%" }}>
                   <div style={{ width: `${layout.modelViewerWidth}%` }}>
                     <Pivot aria-label="Use left and right arrow keys to navigate" selectedKey={leftPanelSelectedKey} className="tab-pivot" headersOnly onLinkClick={this.handleLeftPanelPivotChange}>
-                      <PivotItem itemKey="twins" headerText={this.props.t("app.goldenLayoutConfig.twinViewer")} />
+                      <PivotItem itemKey="patientFiles" headerText={this.props.t("app.goldenLayoutConfig.patientFileViewer")} />
                       <PivotItem style={{ height: "100%" }} itemKey="models" headerText={this.props.t("app.goldenLayoutConfig.modelViewer")} />
                     </Pivot>
                     <div className="tab-pivot-panel">
-                      <div className={leftPanelSelectedKey === "twins" ? "show" : "hidden"}>
-                        <TwinViewerComponent />
+                      <div className={leftPanelSelectedKey === "patientFiles" ? "show" : "hidden"}>
+                        <PatientFileViwerComponent />
                       </div>
                       <div className={leftPanelSelectedKey === "models" ? "show" : "hidden"}>
                         <ModelViewerComponent
@@ -385,7 +385,7 @@ class App extends Component {
                     <Pivot aria-label="Use left and right arrow keys to navigate" selectedKey={mainContentSelectedKey}
                       className="tab-pivot" headersOnly onLinkClick={(item) => this.handleMainContentPivotChange(item.props.itemKey)}>
                       <PivotItem style={{ height: "100%" }} itemKey="graph-viewer" headerText={this.props.t("app.goldenLayoutConfig.graph")} ariaLabel={this.props.t("app.goldenLayoutConfig.graph")} ariaLive="assertive" />
-                      <PivotItem style={{ height: "100%" }} itemKey="model-graph-viewer" headerText={this.props.t("app.goldenLayoutConfig.modelGraphViewer")} ariaLabel={this.props.t("app.goldenLayoutConfig.modelGraphViewer")} ariaLive="assertive" />
+                      {/* <PivotItem style={{ height: "100%" }} itemKey="model-graph-viewer" headerText={this.props.t("app.goldenLayoutConfig.modelGraphViewer")} ariaLabel={this.props.t("app.goldenLayoutConfig.modelGraphViewer")} ariaLive="assertive" /> */}
                       {layout.showImport && <PivotItem style={{ height: "100%" }} itemKey="import" headerText={this.props.t("app.importComponentConfig.title")} ariaLabel={this.props.t("app.importComponentConfig.title")} ariaLive="assertive"
                         onRenderItemLink={this.renderClosablePivotItem} />}
                       {layout.showExport && <PivotItem style={{ height: "100%" }} itemKey="export" headerText={this.props.t("app.exportComponentConfig.title")} ariaLabel={this.props.t("app.exportComponentConfig.title")} ariaLive="assertive"

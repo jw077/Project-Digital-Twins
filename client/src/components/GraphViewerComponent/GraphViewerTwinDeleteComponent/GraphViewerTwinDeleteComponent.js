@@ -8,7 +8,6 @@ import ModalComponent from "../../ModalComponent/ModalComponent";
 import { apiService } from "../../../services/ApiService";
 import { print } from "../../../services/LoggingService";
 import { eventService } from "../../../services/EventService";
-
 import "../GraphViewerComponentShared.scss";
 
 export class GraphViewerTwinDeleteComponent extends Component {
@@ -44,7 +43,7 @@ export class GraphViewerTwinDeleteComponent extends Component {
     }
 
     if (onDelete) {
-      const ids = selectedNodes.length > 1 ? selectedNodes.map(node => node.id) : [ selectedNode.id ];
+      const ids = selectedNodes.length > 1 ? selectedNodes.map(node => node.id) : [selectedNode.id];
       onDelete(ids);
     }
 
@@ -67,6 +66,7 @@ export class GraphViewerTwinDeleteComponent extends Component {
   confirm = async () => {
     await this.deleteSelected();
     this.setState({ showModal: false });
+    this.props.onDeleteSelectFile();
   }
 
   cancel = () => {

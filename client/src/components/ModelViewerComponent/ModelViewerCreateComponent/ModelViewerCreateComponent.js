@@ -57,10 +57,15 @@ export class ModelViewerCreateComponent extends Component {
       print(`*** Creating a twin instance`, "info");
       const modelService = new ModelService();
       const payload = await modelService.createPayload(item.key);
+
+      console.log("Item key: " + JSON.stringify(item.key));
+      console.log("payload: " + JSON.stringify(payload));
       print("Generated model payload:", "info");
       print(JSON.stringify(payload, null, 2), "info");
 
       const twinResult = await apiService.addTwin(name, payload);
+
+      console.log("twin result: " + JSON.stringify(twinResult));
       print("*** Creation result:", "info");
       print(JSON.stringify(twinResult, null, 2), "info");
 

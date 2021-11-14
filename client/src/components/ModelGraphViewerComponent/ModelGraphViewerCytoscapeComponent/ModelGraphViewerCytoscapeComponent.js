@@ -59,8 +59,8 @@ export class ModelGraphViewerCytoscapeComponent extends React.Component {
     const cy = this.graphControl;
     this.contextMenu = cy.contextMenus({
       menuItems: this.contextMenuItems,
-      menuItemClasses: [ "custom-menu-item" ],
-      contextMenuClasses: [ "custom-context-menu" ]
+      menuItemClasses: ["custom-menu-item"],
+      contextMenuClasses: ["custom-context-menu"]
     });
   }
 
@@ -379,7 +379,7 @@ export class ModelGraphViewerCytoscapeComponent extends React.Component {
   getContents = (properties, telemetries) => {
     let definedProperties = "";
     let definedTelemetries = "";
-    for (const [ key ] of Object.entries(properties)) {
+    for (const [key] of Object.entries(properties)) {
       definedProperties += `<li>${key}</li>`;
     }
     if (telemetries) {
@@ -425,7 +425,7 @@ export class ModelGraphViewerCytoscapeComponent extends React.Component {
   };
 
   getPopperRelationshipContent = (data, relationship) => {
-    const {source, target, label } = data;
+    const { source, target, label } = data;
     const properties = relationship.properties || [];
     const { definedProperties } = this.getRelationshipsContents(properties);
     const div = document.createElement("div");

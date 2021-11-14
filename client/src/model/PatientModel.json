@@ -1,0 +1,133 @@
+{
+    "@id": "dtmi:example:Patient;1",
+    "@type": "Interface",
+    "displayName": "Patient",
+    "@context": "dtmi:dtdl:context;2",
+    "contents": [
+        {
+            "name": "PATIENTID",
+            "@type": "Property",
+            "schema": "string"
+        },
+        {
+            "name": "HEIGHT",
+            "@type": "Property",
+            "schema": "double"
+        },
+        {
+            "name": "WEIGHT",
+            "@type": "Property",
+            "schema": "double"
+        },
+        {
+            "name": "OPERATIONNAME",
+            "@type": "Property",
+            "schema": "string"
+        },
+        {
+            "name": "OPTYPE",
+            "@type": "Property",
+            "schema": "double"
+        },
+        {
+            "name": "OPGRADE",
+            "@type": "Property",
+            "schema": "integer"
+        },
+        {
+            "name": "AFTERCLIC",
+            "@type": "Property",
+            "schema": "string"
+        },
+        {
+            "name": "ANESWAY",
+            "@type": "Property",
+            "schema": "double"
+        },
+        {
+            "name": "ANESMINUTE",
+            "@type": "Property",
+            "schema": "double"
+        },
+        {
+            "name": "OPMINUTE",
+            "@type": "Property",
+            "schema": "double"
+        },
+        {
+            "name": "EMERGENCY_INDICATOR",
+            "@type": "Property",
+            "schema": "double"
+        },
+        {
+            "name": "label",
+            "@type": "Property",
+            "schema": "string"
+        },
+        {
+            "name": "BLOOD_LOSSED",
+            "@type": "Property",
+            "schema": "double"
+        },
+        {
+            "name": "OUT_FLUIDS_AMOUNT",
+            "@type": "Property",
+            "schema": "double"
+        },
+        {
+            "name": "recipe",
+            "@type": "Property",
+            "schema": "double"
+        },
+        {
+            "name": "SufentanilConcentration",
+            "@type": "Property",
+            "schema": "double"
+        },
+        {
+            "name": "TramadolConcentration",
+            "@type": "Property",
+            "schema": "double"
+        },
+        {
+            "name": "ButofinoConcentration",
+            "@type": "Property",
+            "schema": "double"
+        },
+        {
+            "name": "DizocineConcentration",
+            "@type": "Property",
+            "schema": "double"
+        },
+        {
+            "name": "Ibenin",
+            "@type": "Property",
+            "schema": "double"
+        },
+        {
+            "name": "Sevoflurane",
+            "@type": "Property",
+            "schema": "double"
+        },
+        {
+            "name": "xinlv_URGENT_FLAG",
+            "@type": "Property",
+            "schema": "double"
+        },
+        {
+            "name": "final_label",
+            "@type": "Property",
+            "schema": "double"
+        },
+        {
+            "name": "complete",
+            "@type": "Property",
+            "schema": "double"
+        },
+        {
+            "name": "YN",
+            "@type": "Property",
+            "schema": "integer"
+        }
+    ]
+}

@@ -166,7 +166,7 @@ class ModelGraphViewerComponent extends React.Component {
   removeModel = id => {
     if (id) {
       this.modelService.removeModel(id);
-      this.cyRef.current.removeNodes([ id ]);
+      this.cyRef.current.removeNodes([id]);
     }
   }
 
@@ -484,13 +484,13 @@ class ModelGraphViewerComponent extends React.Component {
         const matches = node.id.toLowerCase().includes(term.text.toLowerCase());
         if (matches) {
           if (term.addSuperTypes) {
-            superTypes = [ ...new Set([ ...superTypes, ...this.getNodeSuperTypes(node) ]) ];
+            superTypes = [...new Set([...superTypes, ...this.getNodeSuperTypes(node)])];
           }
           if (term.addSubTypes) {
-            subTypes = [ ...new Set([ ...subTypes, ...this.getNodeSubTypes(node) ]) ];
+            subTypes = [...new Set([...subTypes, ...this.getNodeSubTypes(node)])];
           }
           if (term.addOutgoingRelationships) {
-            outgoingRels = [ ...new Set([ ...outgoingRels, ...this.getNodeOutgoingRelationships(node) ]) ];
+            outgoingRels = [...new Set([...outgoingRels, ...this.getNodeOutgoingRelationships(node)])];
           }
         }
         return matches;
@@ -499,13 +499,13 @@ class ModelGraphViewerComponent extends React.Component {
         const matches = node.label.toLowerCase().includes(term.text.toLowerCase());
         if (matches) {
           if (term.addSuperTypes) {
-            superTypes = [ ...new Set([ ...superTypes, ...this.getNodeSuperTypes(node) ]) ];
+            superTypes = [...new Set([...superTypes, ...this.getNodeSuperTypes(node)])];
           }
           if (term.addSubTypes) {
-            subTypes = [ ...new Set([ ...subTypes, ...this.getNodeSubTypes(node) ]) ];
+            subTypes = [...new Set([...subTypes, ...this.getNodeSubTypes(node)])];
           }
           if (term.addOutgoingRelationships) {
-            outgoingRels = [ ...new Set([ ...outgoingRels, ...this.getNodeOutgoingRelationships(node) ]) ];
+            outgoingRels = [...new Set([...outgoingRels, ...this.getNodeOutgoingRelationships(node)])];
           }
         }
         return matches;
@@ -514,13 +514,13 @@ class ModelGraphViewerComponent extends React.Component {
       return matchesId || matchesDisplayName || matchesSelectedNode;
     });
     if (superTypes.length > 0) {
-      filteredNodes = [ ...new Set([ ...filteredNodes, ...superTypes ]) ];
+      filteredNodes = [...new Set([...filteredNodes, ...superTypes])];
     }
     if (subTypes.length > 0) {
-      filteredNodes = [ ...new Set([ ...filteredNodes, ...subTypes ]) ];
+      filteredNodes = [...new Set([...filteredNodes, ...subTypes])];
     }
     if (outgoingRels.length > 0) {
-      filteredNodes = [ ...new Set([ ...filteredNodes, ...outgoingRels ]) ];
+      filteredNodes = [...new Set([...filteredNodes, ...outgoingRels])];
     }
     return filteredNodes;
   }
@@ -656,7 +656,7 @@ class ModelGraphViewerComponent extends React.Component {
               message={`${Math.round(progress)}%`} />
           )}
         </div>
-        <div className="model-detail" style={{width: modelDetailIsOpen ? `${modelDetailWidth}%` : 0}}>
+        <div className="model-detail" style={{ width: modelDetailIsOpen ? `${modelDetailWidth}%` : 0 }}>
           <div className="detail-toggle" onClick={this.toggleModelDetail} tabIndex="0" onKeyDown={this.handleToggleModelDetailOnEnter}>
             <Icon
               className="toggle-icon"

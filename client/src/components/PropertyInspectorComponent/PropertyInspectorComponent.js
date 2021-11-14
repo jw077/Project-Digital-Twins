@@ -253,6 +253,8 @@ const PropertyInspectorComponent = ({ isOpen }) => {
 
             try {
                 await apiService.updateTwin(patchData.id, patchData.patches);
+                console.log("patchData.id: " + JSON.stringify(patchData.id));
+                console.log("patchData.patches: " + JSON.stringify(patchData.patches));
             } catch (err) {
                 dispatch({
                     type: pIActionTypes.setIsSelectionLoading,

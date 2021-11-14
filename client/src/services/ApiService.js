@@ -14,7 +14,7 @@ import { eventService } from "./EventService";
 const getAllTwinsQuery = "SELECT * FROM digitaltwins";
 
 const getDataFromQueryResponse = response => {
-  const list = [ ...response ];
+  const list = [...response];
   const data = {
     twins: [],
     relationships: [],
@@ -130,7 +130,7 @@ class ApiService {
   async queryRelationshipsPaged(twinIds, callback, type = REL_TYPE_OUTGOING) {
     await this.initialize();
 
-    const operations = type === REL_TYPE_ALL ? [ REL_TYPE_OUTGOING, REL_TYPE_INCOMING ] : [ type ];
+    const operations = type === REL_TYPE_ALL ? [REL_TYPE_OUTGOING, REL_TYPE_INCOMING] : [type];
     for (let i = 0; i < operations.length; i++) {
       const op = operations[i];
       const isFinalOp = i === operations.length - 1;
@@ -143,7 +143,7 @@ class ApiService {
         print(JSON.stringify(page, null, 2), "info");
 
         // Indicate to the caller that we're not done in the case where we are calling multiple operations
-        const callbackResponse = [ ...page.value ];
+        const callbackResponse = [...page.value];
         if (page.continuationToken || !isFinalOp) {
           callbackResponse.nextLink = true;
         }
@@ -210,13 +210,13 @@ class ApiService {
   async deleteTwinRelationships(twinId, skipIncoming = false) {
     await this.initialize();
 
-    const rels = await this.queryRelationships([ twinId ], REL_TYPE_OUTGOING);
+    const rels = await this.queryRelationships([twinId], REL_TYPE_OUTGOING);
     for (const r of rels) {
       await this.deleteRelationship(twinId, r.$relationshipId);
     }
 
     if (!skipIncoming) {
-      const incRels = await this.queryRelationships([ twinId ], REL_TYPE_INCOMING);
+      const incRels = await this.queryRelationships([twinId], REL_TYPE_INCOMING);
       for (const r of incRels) {
         await this.deleteRelationship(r.$sourceId, r.$relationshipId);
       }
@@ -354,7 +354,7 @@ class CachedApiService extends ApiService {
   }
 
   async addRelationship(sourceId, targetId, relationshipType, relationshipId) {
-    for (const id of [ sourceId, targetId ]) {
+    for (const id of [sourceId, targetId]) {
       if (this.cache.relationships[id]) {
         delete this.cache.relationships[id];
       }

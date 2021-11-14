@@ -3,7 +3,6 @@
 
 import React from "react";
 import { Icon } from "office-ui-fabric-react";
-
 import GraphViewerCommandBarComponent from "./GraphViewerCommandBarComponent/GraphViewerCommandBarComponent";
 import { GraphViewerCytoscapeComponent, GraphViewerCytoscapeLayouts } from "./GraphViewerCytoscapeComponent/GraphViewerCytoscapeComponent";
 import { GraphViewerRelationshipCreateComponent } from "./GraphViewerRelationshipCreateComponent/GraphViewerRelationshipCreateComponent";
@@ -13,7 +12,6 @@ import GraphViewerRelationshipDeleteComponent from "./GraphViewerRelationshipDel
 import PropertyInspectorComponent from "../PropertyInspectorComponent/PropertyInspectorComponent";
 import GraphViewerFilteringComponent from "./GraphViewerFilteringComponent/GraphViewerFilteringComponent";
 import { withTranslation } from "react-i18next";
-
 import LoaderComponent from "../LoaderComponent/LoaderComponent";
 import { apiService } from "../../services/ApiService";
 import { ModelService } from "../../services/ModelService";
@@ -23,8 +21,27 @@ import { BatchService } from "../../services/BatchService";
 import { settingsService } from "../../services/SettingsService";
 import { REL_TYPE_OUTGOING, DETAIL_MIN_WIDTH, PROPERTY_INSPECTOR_DEFAULT_WIDTH } from "../../services/Constants";
 import { getUniqueRelationshipId } from "../../utils/utilities";
-
 import "./GraphViewerComponent.scss";
+import { connect } from "react-redux";
+import { bindActionCreators } from 'redux';
+import { deleteFileTwins, updatePatientFileList } from "../../actions/PatientFileManagementAction";
+import patientModel from "../../model/PatientModel.json";
+import equal from 'fast-deep-equal'
+
+const mapStateToProps = (state) => {
+  return {
+    fileTwinsToDelete: state.PatientFileManagementReducer.fileTwinsToDelete,
+    patientFileList: state.PatientFileManagementReducer.uploadedFiles
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    deleteFileTwins: bindActionCreators(deleteFileTwins, dispatch),
+    updatePatientFileList: bindActionCreators(updatePatientFileList, dispatch)
+  };
+}
+
 class GraphViewerComponent extends React.Component {
 
   constructor(props) {
@@ -51,7 +68,7 @@ class GraphViewerComponent extends React.Component {
       filteringTerms: [],
       highlightedNodes: [],
       filteredNodes: [],
-      noResults: false
+      noResults: false,
     };
     this.view = React.createRef();
     this.create = React.createRef();
@@ -90,7 +107,7 @@ class GraphViewerComponent extends React.Component {
     eventService.subscribeAddRelationship(data => data && this.onRelationshipCreate(data));
     eventService.subscribeDeleteRelationship(data => data && this.onRelationshipDelete(data));
     eventService.subscribeCreateTwin(data => {
-      this.cyRef.current.addTwins([ data ]);
+      this.cyRef.current.addTwins([data]);
       this.cyRef.current.doLayout();
     });
     eventService.subscribeConfigure(evt => {
@@ -220,7 +237,7 @@ class GraphViewerComponent extends React.Component {
           this.cyRef.current.addTwins(extraTwins);
           await this.cyRef.current.doLayout();
           data.twins.forEach(x => allTwins.push({ ...x, selected: true }));
-          this.setState({ overlayItems: { ...data, twins: data.twins.map(t => t.$dtId) }});
+          this.setState({ overlayItems: { ...data, twins: data.twins.map(t => t.$dtId) } });
           this.updateProgress();
         } else {
           this.setState({ couldNotDisplay: true });
@@ -268,7 +285,7 @@ class GraphViewerComponent extends React.Component {
     this.relationships = [];
     const existingRels = clearExisting ? this.cyRef.current.getRelationships() : [];
 
-    const allTwins = [ ...twins ];
+    const allTwins = [...twins];
     const existingTwins = [];
 
     for (let i = 0; i < expansionLevel; i++) {
@@ -295,11 +312,11 @@ class GraphViewerComponent extends React.Component {
                 if (settingsService.eagerLoading || loadTargets) {
                   const missingTwins = [];
                   for (const rel of rels) {
-                    for (const prop of [ "$sourceId", "$targetId" ]) {
+                    for (const prop of ["$sourceId", "$targetId"]) {
                       // eslint-disable-next-line max-depth
                       if (rel[prop] && allTwins.every(x => x.$dtId !== rel[prop])) {
                         const missingTwin = await apiService.getTwinById(rel[prop]);
-                        [ missingTwins, allTwins ].forEach(x => x.push(missingTwin));
+                        [missingTwins, allTwins].forEach(x => x.push(missingTwin));
                       }
                     }
                   }
@@ -378,7 +395,7 @@ class GraphViewerComponent extends React.Component {
   onNodeDoubleClicked = async e => {
     try {
       this.canceled = false;
-      await this.getRelationshipsData([ { $dtId: e.id } ], 10, true, false,
+      await this.getRelationshipsData([{ $dtId: e.id }], 10, true, false,
         settingsService.relTypeLoading, settingsService.relExpansionLevel);
     } catch (exc) {
       if (this.canceled) {
@@ -467,7 +484,7 @@ class GraphViewerComponent extends React.Component {
 
   onRelationshipCreate = async relationship => {
     if (relationship) {
-      this.cyRef.current.addRelationships([ relationship ]);
+      this.cyRef.current.addRelationships([relationship]);
       await this.cyRef.current.doLayout();
       this.setState({ selectedNode: null, selectedNodes: null });
       this.cyRef.current.unselectSelectedNodes();
@@ -481,7 +498,7 @@ class GraphViewerComponent extends React.Component {
 
   onRelationshipDelete = async relationship => {
     if (relationship) {
-      this.cyRef.current.removeRelationships([ getUniqueRelationshipId(relationship) ]);
+      this.cyRef.current.removeRelationships([getUniqueRelationshipId(relationship)]);
       await this.cyRef.current.doLayout();
     }
   }
@@ -535,6 +552,33 @@ class GraphViewerComponent extends React.Component {
     });
   }
 
+
+
+  onDeleteFileTwins = () => {
+    console.log("file twins: " + JSON.stringify(this.props.fileTwinsToDelete));
+    console.log("length: " + Object.keys(this.props.fileTwinsToDelete));
+    const { patientIds } = this.props.fileTwinsToDelete;
+    const selectedNodes = patientIds.map(id => {
+      return { id: id, modelId: patientModel["@id"] };
+    });
+    const selectedNode = { id: patientIds[0], modelId: patientModel["@id"] };
+    this.setState({ selectedNode, selectedNodes }, () => {
+      this.delete.current.open();
+    });
+  }
+
+  onDeleteSelectFile = () => {
+    const { fileId } = this.props.fileTwinsToDelete;
+    let patientFileList = this.props.patientFileList;
+    delete patientFileList[fileId];
+    this.props.deleteFileTwins({});
+    this.props.updatePatientFileList(patientFileList);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!equal(prevProps.fileTwinsToDelete.fileId, this.props.fileTwinsToDelete.fileId) && Object.keys(this.props.fileTwinsToDelete).length !== 0) this.onDeleteFileTwins();
+  }
+
   onConfirmRelationshipDelete = edge => {
     const { selectedEdges } = this.state;
     const edgeData = edge.data();
@@ -542,13 +586,13 @@ class GraphViewerComponent extends React.Component {
       if (selectedEdges.some(e => e.id === edgeData.id)) {
         this.deleteRel.current.open();
       } else {
-        const newEdges = [ ...selectedEdges, edgeData ];
+        const newEdges = [...selectedEdges, edgeData];
         this.setState({ selectedEdges: newEdges }, () => {
           this.deleteRel.current.open();
         });
       }
     } else {
-      this.setState({ selectedEdges: [ edgeData ] }, () => {
+      this.setState({ selectedEdges: [edgeData] }, () => {
         this.deleteRel.current.open();
       });
     }
@@ -678,7 +722,7 @@ class GraphViewerComponent extends React.Component {
     const highlightedNodes = this.getFilteredNodes(activeTerms, overlayResults);
     let highlightedNodesIds = highlightedNodes.map(n => n.$dtId);
     if (overlayResults && overlayItems.twins && overlayItems.twins.length > 0) {
-      highlightedNodesIds = [ ...highlightedNodesIds, ...overlayItems.twins ];
+      highlightedNodesIds = [...highlightedNodesIds, ...overlayItems.twins];
     }
     this.cyRef.current.highlightNodes(highlightedNodesIds, activeTerms.length > 0 || overlayResults);
     this.setState({ highlightedNodes });
@@ -706,7 +750,7 @@ class GraphViewerComponent extends React.Component {
         const matches = node.$dtId.toLowerCase().includes(term.text.toLowerCase());
         if (matches) {
           if (term.addOutgoingRelationships) {
-            outgoingRels = [ ...new Set([ ...outgoingRels, ...this.getNodeOutgoingRelationships(node) ]) ];
+            outgoingRels = [...new Set([...outgoingRels, ...this.getNodeOutgoingRelationships(node)])];
           }
         }
         return matches;
@@ -714,7 +758,7 @@ class GraphViewerComponent extends React.Component {
       return matchesId;
     });
     if (outgoingRels.length > 0) {
-      filteredNodes = [ ...new Set([ ...filteredNodes, ...outgoingRels ]) ];
+      filteredNodes = [...new Set([...filteredNodes, ...outgoingRels])];
     }
     return filteredNodes;
   }
@@ -767,7 +811,7 @@ class GraphViewerComponent extends React.Component {
           onCreate={this.onRelationshipCreate} />
         <GraphViewerRelationshipViewerComponent selectedNode={selectedNode} ref={this.view} />
         <GraphViewerTwinDeleteComponent selectedNode={selectedNode} selectedNodes={selectedNodes} query={query} ref={this.delete}
-          onDelete={this.onTwinDelete} onGetCurrentNodes={() => this.cyRef.current.graphControl.nodes()} />
+          onDeleteSelectFile={this.onDeleteSelectFile} onDelete={this.onTwinDelete} onGetCurrentNodes={() => this.cyRef.current.graphControl.nodes()} />
         <GraphViewerRelationshipDeleteComponent selectedEdges={selectedEdges} ref={this.deleteRel} />
       </>
     );
@@ -927,7 +971,7 @@ class GraphViewerComponent extends React.Component {
           </div>
           {isLoading && <LoaderComponent message={`${Math.round(progress)}%`} cancel={() => this.canceled = true} />}
         </div>
-        <div className="pi-wrap" style={{width: propertyInspectorIsOpen ? `${propInspectorDetailWidth}%` : 0}}>
+        <div className="pi-wrap" style={{ width: propertyInspectorIsOpen ? `${propInspectorDetailWidth}%` : 0 }}>
           <div className="pi-toggle" tabIndex="0" onClick={this.togglePropertyInspector}>
             <Icon
               className="toggle-icon"
@@ -950,4 +994,4 @@ class GraphViewerComponent extends React.Component {
 
 }
 
-export default withTranslation("translation", { withRef: true })(GraphViewerComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation("translation", { withRef: true })(GraphViewerComponent));

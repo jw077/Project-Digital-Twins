@@ -181,8 +181,8 @@ export class GraphViewerCytoscapeComponent extends React.Component {
       const cy = this.graphControl;
       this.contextMenu = cy.contextMenus({
         menuItems: this.contextMenuItems,
-        menuItemClasses: [ "custom-menu-item" ],
-        contextMenuClasses: [ "custom-context-menu" ]
+        menuItemClasses: ["custom-menu-item"],
+        contextMenuClasses: ["custom-context-menu"]
       });
     }
 
@@ -212,6 +212,7 @@ export class GraphViewerCytoscapeComponent extends React.Component {
   }
 
   addTwins(twins) {
+
     const mapped = twins
       .filter(x => this.graphControl.$id(x.$dtId).length === 0)
       .map(x => ({
@@ -219,7 +220,8 @@ export class GraphViewerCytoscapeComponent extends React.Component {
           id: x.$dtId,
           label: x.$dtId,
           modelId: x.$metadata.$model,
-          category: "Twin"
+          category: "Twin",
+          patientLabel: x.patientLabel
         }
       }));
 
@@ -279,9 +281,9 @@ export class GraphViewerCytoscapeComponent extends React.Component {
     const cy = this.graphControl;
     let relatedNodesIds = [];
     if (this.selectedNodes.length > 0) {
-      relatedNodesIds = this.getSelectedNodesChildrenIds([ ...this.selectedNodes, { id: node.id(), modelId: node.data().modelId } ]);
+      relatedNodesIds = this.getSelectedNodesChildrenIds([...this.selectedNodes, { id: node.id(), modelId: node.data().modelId }]);
     } else if (node && node.id()) {
-      relatedNodesIds = this.getSelectedNodesChildrenIds([ { id: node.id(), modelId: node.data().modelId } ]);
+      relatedNodesIds = this.getSelectedNodesChildrenIds([{ id: node.id(), modelId: node.data().modelId }]);
     }
     cy.nodes().forEach(cyNode => {
       if (relatedNodesIds.indexOf(cyNode.id()) === -1) {
@@ -313,9 +315,9 @@ export class GraphViewerCytoscapeComponent extends React.Component {
     if (this.selectedNodes.length > 0) {
       this.clearSelection();
       cy.$(":selected").unselect();
-      relatedNodesIds = this.getSelectedNodesChildrenIds([ ...this.selectedNodes, { id: node.id(), modelId: node.data().modelId } ]);
+      relatedNodesIds = this.getSelectedNodesChildrenIds([...this.selectedNodes, { id: node.id(), modelId: node.data().modelId }]);
     } else if (node && node.id()) {
-      relatedNodesIds = this.getSelectedNodesChildrenIds([ { id: node.id(), modelId: node.data().modelId } ]);
+      relatedNodesIds = this.getSelectedNodesChildrenIds([{ id: node.id(), modelId: node.data().modelId }]);
     }
     cy.nodes().forEach(cyNode => {
       if (relatedNodesIds.indexOf(cyNode.id()) !== -1) {
@@ -462,23 +464,23 @@ export class GraphViewerCytoscapeComponent extends React.Component {
         cy.elements(`node[type="${t}"]`).style("background-color", types[t]);
       }
 
-      // Color by model type
+      // Color by patient label type
       for (let i = 0; i < el.length; i++) {
-        mtypes[el[i].data("modelId")] = {
-          backgroundColor: `#${this.getColor(i)}`,
+        mtypes[el[i].data("id")] = {
+          backgroundColor: el[i].data("patientLabel") === "0" ? "red" : "green",
           backgroundImage: this.getBackgroundImage(el[i].data("modelId"))
         };
       }
       for (const t of Object.keys(mtypes)) {
         const { backgroundColor, backgroundImage } = mtypes[t];
         if (backgroundImage) {
-          cy.elements(`node[modelId="${t}"]`).style({
+          cy.elements(`node[id="${t}"]`).style({
             "background-color": backgroundColor,
             "background-image": `url(${backgroundImage})`,
             ...modelWithImageStyle
           });
         } else {
-          cy.elements(`node[modelId="${t}"]`).style({
+          cy.elements(`node[id="${t}"]`).style({
             "background-color": backgroundColor,
             ...modelWithImageStyle
           });
@@ -654,8 +656,8 @@ export class GraphViewerCytoscapeComponent extends React.Component {
       this.contextEdge = null;
       this.contextMenu = this.graphControl.contextMenus({
         menuItems: this.contextMenuItems,
-        menuItemClasses: [ "custom-menu-item" ],
-        contextMenuClasses: [ "custom-context-menu" ]
+        menuItemClasses: ["custom-menu-item"],
+        contextMenuClasses: ["custom-context-menu"]
       });
     };
     const handler = e => {
@@ -683,7 +685,7 @@ export class GraphViewerCytoscapeComponent extends React.Component {
   getContents = (properties, relationships) => {
     let definedProperties = "";
     let definedRelationships = "";
-    for (const [ key ] of Object.entries(properties)) {
+    for (const [key] of Object.entries(properties)) {
       definedProperties += `<li>${key}</li>`;
     }
     relationships.forEach(r => definedRelationships += `<li>${r.name}</li>`);
@@ -705,36 +707,32 @@ export class GraphViewerCytoscapeComponent extends React.Component {
       <div>
         <h4>DTID:</h4>
         <p>${label}</p>
-        ${
-          modelDisplayName
-            ? `<h4>MODEL DISPLAY NAME:</h4>
+        ${modelDisplayName
+        ? `<h4>MODEL DISPLAY NAME:</h4>
           <p>${modelDisplayName}</p>`
-            : ""
-        }
+        : ""
+      }
         <h4>MODEL ID:</h4>
         <p>${modelId}</p>
-        ${
-          modelDescription
-            ? `<h4>DESCRIPTION:</h4>
+        ${modelDescription
+        ? `<h4>DESCRIPTION:</h4>
           <p class="description-container">${modelDescription ? modelDescription : ""}</p>`
-            : ""
-        }
+        : ""
+      }
       </div>
-      ${
-        definedProperties
-          ? `<div>
+      ${definedProperties
+        ? `<div>
           <h4>DEFINED PROPERTIES</h4>
           <ul>${definedProperties}</ul>
         </div>`
-          : ""
+        : ""
       }
-      ${
-        definedRelationships
-          ? `<div>
+      ${definedRelationships
+        ? `<div>
           <h4>DEFINED RELATIONSHIPS</h4>
           <ul>${definedRelationships}</ul>
         </div>`
-          : ""
+        : ""
       }
     `;
     return div;

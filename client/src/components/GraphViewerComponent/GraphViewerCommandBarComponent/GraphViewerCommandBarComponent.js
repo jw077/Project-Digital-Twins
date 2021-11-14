@@ -174,7 +174,7 @@ class GraphViewerCommandBarComponent extends Component {
     field.blur();
     setTimeout(() => {
       field.focus();
-    }, [ 100 ]);
+    }, [100]);
   }
 
   onExpansionLevelChange = evt => {
@@ -213,7 +213,7 @@ class GraphViewerCommandBarComponent extends Component {
     return (
       <>
         <div className="commands-wrap">
-          <CommandBar className="gv-commandbar button-group light-command-bar"
+          {/* <CommandBar className="gv-commandbar button-group light-command-bar"
             farItems={this.buttonGroupItems}
             buttonAs={this.renderButton}
             ariaLabel={this.props.t("graphViewerCommandBarComponent.render.commandBarAriaLabel")}
@@ -232,7 +232,7 @@ class GraphViewerCommandBarComponent extends Component {
             farItems={this.layoutItems}
             buttonAs={this.renderButton}
             ariaLabel={this.props.t("graphViewerCommandBarComponent.render.commandBarAriaLabel")}
-            ariaLive="assertive" />
+            ariaLive="assertive" /> */}
         </div>
         <input id="model-file-input" type="file" name="name" className="gc-fileInput" ref={this.importModelRef}
           onChange={this.onImportGraphClicked} />
